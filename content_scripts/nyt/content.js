@@ -1,6 +1,6 @@
 'use strict';
 
-const LETTER_KEY_CODE_LIMITS = [65, 90];
+const LETTER_KEY_CODE_LIMITS = { min: 65, max: 90 };
 const BACKSPACE_KEY_CODE = 8;
 const WORDLE_LENGTH = 5;
 
@@ -33,7 +33,7 @@ const WORDLE_LENGTH = 5;
   const updateWordAttempt = (event) => {
     const { key, keyCode } = event;
 
-    if (keyCode >= LETTER_KEY_CODE_LIMITS[0] && keyCode <= LETTER_KEY_CODE_LIMITS[1]) {
+    if (keyCode >= LETTER_KEY_CODE_LIMITS.min && keyCode <= LETTER_KEY_CODE_LIMITS.max) {
       if (wordAttempt.length >= WORDLE_LENGTH) return;
 
       wordAttempt += key;
@@ -107,7 +107,7 @@ const WORDLE_LENGTH = 5;
       if (!wordAttempt[position]) return;
 
       result = result && (letter !== wordAttempt[position])
-      if (wordAttempt.length === 6) result = result && wordAttempt.includes(letter)
+      if (wordAttempt.length === WORDLE_LENGTH) result = result && wordAttempt.includes(letter)
     })
 
     return result
@@ -125,7 +125,7 @@ const WORDLE_LENGTH = 5;
     }, {
       type: "present",
       isValid: validatePresentLetters(),
-      message: "You typed a letter that is in the word but the position is wrong"
+      message: "You typed (or forgot to type) a letter that is in the word but the position is wrong"
     }]
 
     alertsWrapperEl.innerHTML = buildAlertsDiv(validations);
