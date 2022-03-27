@@ -1,15 +1,26 @@
 {
   "name": "Wordle Pal",
   "description": "A utility for wordle games, to help you notice any error before you submit an answer",
-  "version": "1.0",
+  "version": "1.0.0",
   "manifest_version": 3,
   "author": "Miguel Prada",
   "action": {
     "default_icon": {
       "16": "images/wordle-pal-16px.png",
       "24": "images/wordle-pal-24px.png",
-      "32": "images/wordle-pal-32px.png"
+      "32": "images/wordle-pal-32px.png",
+      "48": "images/wordle-pal-48px.png",
+      "128": "images/wordle-pal-128px.png",
+      "256": "images/wordle-pal-256px.png"
     }
+  },
+  "icons": {
+    "16": "images/wordle-pal-16px.png",
+    "24": "images/wordle-pal-24px.png",
+    "32": "images/wordle-pal-32px.png",
+    "48": "images/wordle-pal-48px.png",
+    "128": "images/wordle-pal-128px.png",
+    "256": "images/wordle-pal-256px.png"
   },
   "content_scripts": [{
     "matches": ["https://www.nytimes.com/games/wordle/index.html"],
