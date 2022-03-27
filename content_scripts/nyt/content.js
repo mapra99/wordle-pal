@@ -53,7 +53,7 @@ const WORDLE_LENGTH = 5;
     return !wordAttempt.split("").find(letter => absentLetters.has(letter))
   }
 
-  const validateKnownPositions = () => {
+  const validateCorrectPositions = () => {
     let knownPositions = new Set();
     gameState.forEach(row => {
       if (!row) return;
@@ -74,9 +74,31 @@ const WORDLE_LENGTH = 5;
     return result
   }
 
-  const validateWordAttempt = () => {
-    if (!validateKnownPositions()) {
-      console.log("USING KNOWN LETTER OUTSIDE POSITION")
+  const validatePresentLetters = () => {
+    let presentLetters = new Set();
+    gameState.forEach(row => {
+      if (!row) return;
+
+      row.forEach((col, index) => {
+        if (col.value === 'present') presentLetters.add({...col, position: index})
+      })
+    })
+
+    let result = true;
+    presentLetters.forEach(presentLetter => {
+      const { letter, position } = presentLetter;
+      if (!wordAttempt[position]) return;
+
+      result = result && (letter !== wordAttempt[position])
+      if (wordAttempt.length === 6) result = result && wordAttempt.includes(letter)
+    })
+
+    return result
+  }
+
+  const runValidations = () => {
+    if (!validatePresentLetters()) {
+      console.log("USING KNOWN LETTER IN WRONG POSITION")
     }
   }
 
@@ -84,7 +106,7 @@ const WORDLE_LENGTH = 5;
     parseStorageToState();
     updateWordAttempt(event);
 
-    validateWordAttempt();
+    runValidations();
   }
 
   window.addEventListener('keyup', updateGameState)
