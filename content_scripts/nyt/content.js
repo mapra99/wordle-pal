@@ -5,10 +5,10 @@ const BACKSPACE_KEY_CODE = 8;
 const WORDLE_LENGTH = 5;
 
 (function NytContent() {
-  let gameState
-  let wordAttempt = ""
+  let gameState;
+  let wordAttempt = "";
   let alertsWrapperEl = document.createElement('div');
-  document.body.appendChild(alertsWrapperEl)
+  let attemptsCount = 0;
 
   const readLocalStorage = () => {
     const value = localStorage.getItem('nyt-wordle-state')
@@ -19,7 +19,7 @@ const WORDLE_LENGTH = 5;
     const storedState = readLocalStorage()
     if (!storedState) return;
 
-    const { boardState, evaluations } = storedState;
+    const { boardState, evaluations, rowIndex } = storedState;
     gameState = evaluations.map((row, rowIndex) => {
       if (!row) return null;
 
@@ -28,6 +28,11 @@ const WORDLE_LENGTH = 5;
         value: col
       }))
     })
+
+    if (attemptsCount !== rowIndex) {
+      wordAttempt = '';
+      attemptsCount = rowIndex;
+    }
   }
 
   const updateWordAttempt = (event) => {
@@ -38,7 +43,7 @@ const WORDLE_LENGTH = 5;
 
       wordAttempt += key;
     } else if (keyCode === BACKSPACE_KEY_CODE) {
-      wordAttempt = wordAttempt.slice(0, -1)
+      wordAttempt = wordAttempt.slice(0, -1);
     }
   }
 
@@ -138,5 +143,6 @@ const WORDLE_LENGTH = 5;
     runValidations();
   }
 
+  document.body.appendChild(alertsWrapperEl);
   window.addEventListener('keyup', updateGameState)
 }())
