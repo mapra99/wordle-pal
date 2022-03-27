@@ -7,6 +7,8 @@ const WORDLE_LENGTH = 5;
 (function NytContent() {
   let gameState
   let wordAttempt = ""
+  let alertsWrapperEl = document.createElement('div');
+  document.body.appendChild(alertsWrapperEl)
 
   const readLocalStorage = () => {
     const value = localStorage.getItem('nyt-wordle-state')
@@ -38,6 +40,21 @@ const WORDLE_LENGTH = 5;
     } else if (keyCode === BACKSPACE_KEY_CODE) {
       wordAttempt = wordAttempt.slice(0, -1)
     }
+  }
+
+  const buildAlertsDiv = (validations) => {
+    const violations = validations.filter(validation => !validation.isValid)
+    if (!violations.length) return '';
+
+    return `
+      <div class="alert errors-alert">
+        <h2>Watch out!</h2>
+        Check out the following before continuing:
+        <ul clas="errors-wrapper">
+          ${violations.map(violation => `<li class=${violation.type}><span class="tile-color"></span>${violation.message}</li>`).join('')}
+        </ul>
+      </div>
+    `
   }
 
   const validateAbsentLetters = () => {
@@ -97,9 +114,21 @@ const WORDLE_LENGTH = 5;
   }
 
   const runValidations = () => {
-    if (!validatePresentLetters()) {
-      console.log("USING KNOWN LETTER IN WRONG POSITION")
-    }
+    const validations = [{
+      type: "absent",
+      isValid: validateAbsentLetters(),
+      message: "You typed a letter that isn't at any spot in the word",
+    }, {
+      type: "correct",
+      isValid: validateCorrectPositions(),
+      message: "You forgot a letter that is in the word and its position is known",
+    }, {
+      type: "present",
+      isValid: validatePresentLetters(),
+      message: "You typed a letter that is in the word but the position is wrong"
+    }]
+
+    alertsWrapperEl.innerHTML = buildAlertsDiv(validations);
   }
 
   const updateGameState = (event) => {
