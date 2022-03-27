@@ -1,0 +1,19 @@
+{
+  "name": "Wordle Pal",
+  "description": "A utility for wordle games, to help you notice any error before you submit an answer",
+  "version": "1.0",
+  "manifest_version": 3,
+  "author": "Miguel Prada",
+  "action": {
+    "default_icon": {
+      "16": "images/wordle-pal-16px.png",
+      "24": "images/wordle-pal-24px.png",
+      "32": "images/wordle-pal-32px.png"
+    }
+  },
+  "content_scripts": [{
+    "matches": ["https://www.nytimes.com/games/wordle/index.html"],
+    "css": ["content_scripts/nyt/content.css"],
+    "js": ["content_scripts/nyt/content.js"]
+  }]
+}
