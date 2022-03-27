@@ -53,24 +53,30 @@ const WORDLE_LENGTH = 5;
     return !wordAttempt.split("").find(letter => absentLetters.has(letter))
   }
 
-  const validateLettersPosition = () => {
-    const result = wordAttempt.split("").find((letter, index) => {
-      
-    })
+  const validateKnownPositions = () => {
+    let knownPositions = new Set();
     gameState.forEach(row => {
       if (!row) return;
 
-      row.forEach(col => {
-        if (col.value === 'absent') absentLetters.add(col.letter)
+      row.forEach((col, index) => {
+        if (col.value === 'correct') knownPositions.add({...col, position: index})
       })
     })
 
-    
+    let result = true;
+    knownPositions.forEach(knownPosition => {
+      const { letter, position } = knownPosition;
+      if (!wordAttempt[position]) return;
+
+      result = result && (letter === wordAttempt[position])
+    })
+
+    return result
   }
 
   const validateWordAttempt = () => {
-    if (!validateLettersPosition()) {
-      console.log("USING ABSENT LETTERS")
+    if (!validateKnownPositions()) {
+      console.log("USING KNOWN LETTER OUTSIDE POSITION")
     }
   }
 
